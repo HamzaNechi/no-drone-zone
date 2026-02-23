@@ -1,5 +1,5 @@
 
-function saveDrawnLayers() {
+/*function saveDrawnLayers() {
     const allFeatures = [];
     drawnItems.eachLayer(layer => {
         allFeatures.push(layer.toGeoJSON());
@@ -15,7 +15,48 @@ function saveDrawnLayers() {
     dlAnchor.setAttribute("href", dataStr);
     dlAnchor.setAttribute("download", "data.geojson");
     dlAnchor.click();
+}*/
+
+
+
+
+
+
+function saveDrawnLayers() {
+
+    const allFeatures = [];
+
+    // 1️⃣ Zones dessinées
+    drawnItems.eachLayer(layer => {
+        allFeatures.push(layer.toGeoJSON());
+    });
+
+    // 2️⃣ Toutes les couches airspace chargées
+    Object.values(airspaceLayers).forEach(layerGroup => {
+
+        layerGroup.eachLayer(layer => {
+            allFeatures.push(layer.toGeoJSON());
+        });
+
+    });
+
+    const geojsonData = {
+        type: "FeatureCollection",
+        features: allFeatures
+    };
+
+    const dataStr = "data:text/json;charset=utf-8," +
+        encodeURIComponent(JSON.stringify(geojsonData, null, 2));
+
+    const dlAnchor = document.createElement('a');
+    dlAnchor.setAttribute("href", dataStr);
+    dlAnchor.setAttribute("download", "all_airspace.geojson");
+    dlAnchor.click();
 }
+
+document.getElementById('saveGeoJSON').onclick = saveDrawnLayers;
+
+
 
 document.getElementById('saveGeoJSON').onclick = saveDrawnLayers;
 

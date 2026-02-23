@@ -15,19 +15,19 @@ const ZONE_RULES = {
 const ZONE_LABELS = {
     ctr: {
         title: "Zone contrôlée (CTR)",
-        message: "Autorisation de l’aviation civile requise"
+        message: "Le survol est autorisé uniquement après confirmation auprès des autorités compétentes."
     },
     restricted: {
         title: "Zone réglementée",
-        message: "Autorisation spéciale requise"
+        message: "Le survol est autorisé uniquement après confirmation auprès des autorités compétentes."
     },
     danger: {
         title: "Zone dangereuse",
-        message: "Vol interdit (champ de tir / activité militaire)"
+        message: "Il est strictement interdit de penetrer cette zone."
     },
     prohibited: {
         title: "Zone interdite",
-        message: "Vol strictement interdit"
+        message: "Il est strictement interdit de penetrer cette zone."
     }
 };
 

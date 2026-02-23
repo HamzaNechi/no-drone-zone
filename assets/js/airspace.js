@@ -33,7 +33,7 @@ loadAirspace("ctr", "blue");
 loadAirspace("restricted", "yellow");
 loadAirspace("danger", "orange");
 loadAirspace("prohibited", "red");
-loadAirspace("limitzone", "purple");
+loadAirspace("limitzone", "pink");
 
 // Toggle UI
 document.querySelectorAll(".layerToggle").forEach(cb => {

@@ -28,12 +28,12 @@ map.addControl(drawControl);
 
 const VALIDATION_MESSAGE = {
   forbidden: {
-    message: "Zone interdite (Restricted / Danger)",
+    message: "Il est strictement interdit de penetrer cette zone.",
     color: "#e74c3c",
     icon: "⚠️"
   },
   authorization: {
-    message: "CTR nécessite une autorisation",
+    message: "Le survol est autorisé uniquement après confirmation auprès des autorités compétentes.",
     color: "#f39c12",
     icon : "🔒"
   },
@@ -169,10 +169,44 @@ function closeDroneStatus() {
 
 
 map.on(L.Draw.Event.CREATED, function (event) {
-  const layer = event.layer;
+  /**
+   * Remplace ce code 
+   */
+  /*const layer = event.layer;
   const geojson = layer.toGeoJSON();
 
+  const validation = validateFlightArea(geojson);*/
+
+  /***
+   * Par Ce Code Pour Détecter l'intersection avec circle
+   */
+
+  const layer = event.layer;
+
+  let geojson;
+
+  // 🔥 CORRECTION POUR CIRCLE
+  if (layer instanceof L.Circle) {
+
+    const center = layer.getLatLng();
+    const radius = layer.getRadius(); // mètres
+
+    geojson = turf.circle(
+      [center.lng, center.lat],
+      radius / 1000, // Turf veut kilomètres
+      { steps: 64, units: 'kilometers' }
+    );
+
+  } else {
+    geojson = layer.toGeoJSON();
+  }
+
+
   const validation = validateFlightArea(geojson);
+
+
+  // 🔥 Désactiver le mode dessin automatiquement
+  drawControl._toolbars.draw.disable();
 
   if (!validation.allowed) {
     showDroneStatus(validation.level, validation.name_zone, validation); // 👈 on affiche ici
