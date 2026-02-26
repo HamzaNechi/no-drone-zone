@@ -67,7 +67,7 @@ function validateFlightArea(flightArea) {
             if (!intersects) continue;
 
             // 🔴 PRIORITÉ 1 — INTERDICTION ABSOLUE
-            if (layerName === "danger" || layerName === "prohibited") {
+            if (layerName === "danger" || layerName === "prohibited" || layerName == "airports") {
                 return {
                     allowed: false,
                     level: "forbidden",
