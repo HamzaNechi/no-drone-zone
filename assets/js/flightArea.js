@@ -48,11 +48,13 @@ function validateFlightArea(flightArea) {
         allowed: true,
         level: "allowed",
         requiresAuthorization: false,
-        name_zone: ""
+        name_zone: "",
+        layer:""
     };
 
     let hasAuthorization = false;
     let authorizationZone = "";
+    let authorizationLayer = "";
 
     for (const [layerName, layer] of Object.entries(airspaceLayers)) {
 
@@ -67,21 +69,22 @@ function validateFlightArea(flightArea) {
             if (!intersects) continue;
 
             // 🔴 PRIORITÉ 1 — INTERDICTION ABSOLUE
-            if (layerName === "danger" || layerName === "prohibited" || layerName == "airports") {
+            if (layerName === "danger" || layerName === "prohibited" || layerName == "airports" || layerName === "restricted" || layerName === "ctr") {
                 return {
                     allowed: false,
                     level: "forbidden",
                     requiresAuthorization: false,
-                    name_zone: feature.properties.name
+                    name_zone: feature.properties.name,
+                    layer : layerName.toUpperCase()
                 };
             }
 
             // 🟠 PRIORITÉ 2 — AUTORISATION
-            if (layerName === "restricted" || layerName === "ctr") {
+            if (layerName === "fir" || layerName === "limitzone") {
                 hasAuthorization = true;
                 authorizationZone = feature.properties.name;
+                authorizationLayer = layerName.toUpperCase()
             }
-
         }
     }
 
@@ -91,7 +94,8 @@ function validateFlightArea(flightArea) {
             allowed: true,
             level: "authorization",
             requiresAuthorization: true,
-            name_zone: authorizationZone
+            name_zone: authorizationZone,
+            layer : authorizationLayer
         };
     }
 

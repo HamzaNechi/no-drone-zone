@@ -38,7 +38,7 @@ function loadAirspace(name, color) {
   if (name !== "airports") {
     applyLoadingAirspace(name, `assets/data/airspace/${name}.geojson`, color);
   } else {
-    for (let i = 1; i <= 6; i++) {
+    for (let i = 1; i <= 9; i++) {
       applyLoadingAirspace(
         name,
         `assets/data/airspace/airports/${i}.geojson`,

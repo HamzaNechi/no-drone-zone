@@ -88,7 +88,7 @@ function showDroneStatus(type, zoneName = null, validationResult = null) {
                     color: #2c3e50;
                     margin-bottom: 8px;
                     line-height: 1.3;
-                ">${zoneDisplay}</div>
+                ">${validationResult.layer} : ${zoneDisplay}</div>
                 
                 <div style="
                     font-size: 13px;

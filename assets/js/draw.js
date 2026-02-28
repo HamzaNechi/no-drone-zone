@@ -33,7 +33,7 @@ const VALIDATION_MESSAGE = {
     icon: "⚠️"
   },
   authorization: {
-    message: "Le survol est autorisé uniquement après confirmation auprès des autorités compétentes.",
+    message: "Autorisé de survoler après confirmation avec les autorités compétentes.",
     color: "#f39c12",
     icon : "🔒"
   },
@@ -51,17 +51,23 @@ function showDroneStatus(type, zoneName = null, validationResult = null) {
     const box = document.getElementById("droneStatus");
     
     var config = {};
+    var title= '';
     if(!validationResult.allowed){
       config = VALIDATION_MESSAGE["forbidden"];
+      title = "Vol Interdit";
     }else if(validationResult.requiresAuthorization){
       config = VALIDATION_MESSAGE["authorization"];
+      title = "AUTORISATION REQUISE";
     }else{
       config = VALIDATION_MESSAGE["allowed"];
+      title = "";
     }
 
     
     // Déterminer le nom de la zone
     const zoneDisplay = zoneName || validationResult?.name_zone || "Zone non identifiée";
+
+    console.log('oooooooo = ', validationResult.layer)
     
     // Déterminer le message approprié
     let alertMessage = config.message;
@@ -98,7 +104,7 @@ function showDroneStatus(type, zoneName = null, validationResult = null) {
                     color: #2c3e50;
                     margin-bottom: 8px;
                     line-height: 1.3;
-                ">${zoneDisplay}</div>
+                ">${validationResult.layer} : ${zoneDisplay}</div>
                 
                 <div style="
                     font-size: 13px;
@@ -222,6 +228,6 @@ map.on(L.Draw.Event.CREATED, function (event) {
 
   drawnItems.addLayer(layer);
 
-  showDroneStatus("allowed"); // ✅ zone valide
+  //showDroneStatus("allowed", null, validation); // ✅ zone valide
 });
 
