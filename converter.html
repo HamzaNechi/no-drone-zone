@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Convertisseur UTM vers Lat/Lng</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.9.0/proj4.js"></script>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        width: 400px;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        background: #053178;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    button:hover {
+        background: #11b8aa;
+    }
+
+    .result {
+        margin-top: 20px;
+        background: #f1f1f1;
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>UTM → Latitude / Longitude</h2>
+
+    <input type="number" id="easting" placeholder="Easting (X)">
+    <input type="number" id="northing" placeholder="Northing (Y)">
+    
+    <button onclick="convert()">Convertir</button>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+
+// Définir UTM Zone 32N (Tunisie)
+proj4.defs("EPSG:32632",
+  "+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs"
+);
+
+function convert() {
+    const easting = parseFloat(document.getElementById("easting").value);
+    const northing = parseFloat(document.getElementById("northing").value);
+
+    if (!easting || !northing) {
+        document.getElementById("result").innerHTML = "Veuillez entrer des valeurs valides.";
+        return;
+    }
+
+    // Conversion
+    const converted = proj4("EPSG:32632", "EPSG:4326", [easting, northing]);
+
+    const longitude = converted[0];
+    const latitude = converted[1];
+
+    document.getElementById("result").innerHTML = `
+        <strong>Latitude:</strong> ${latitude}<br>
+        <strong>Longitude:</strong> ${longitude}
+    `;
+}
+
+</script>
+
+</body>
+</html>
