@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>No Drone Zone – Web</title>
+
+
+  <link rel="icon" type="image/png" href="./assets/img/drone-favicon.png">
+
+
+  <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    <!-- Leaflet Draw -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-draw/dist/leaflet.draw.css" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+<!-- Bouton hamburger pour mobile -->
+<button id="mobile-menu-toggle" class="hamburger-btn" aria-label="Toggle menu">
+  <span></span>
+  <span></span>
+  <span></span>
+</button>
+
+<!-- Overlay pour fermer le menu -->
+<div id="sidebar-overlay"></div>
+
+<div id="sidebar">
+  <h2>NO DRONE ZONE</h2>
+
+  <button id="btn-road">🗺️ Carte routière</button>
+  <button id="btn-sat">🛰️ Satellite</button>
+  <button id="btn-locate">📍 Ma position</button>
+
+  <hr>
+  
+  <h3>Informations du drone</h3>
+  <div class="info-card">
+    <div class="info-label">🚁 Marque du drone</div>
+    <div class="info-value" id="brand">Non renseigné</div>
+  </div>
+  <div class="info-card">
+    <div class="info-label">📏 Hauteur de vol prévue</div>
+    <div class="info-value" id="altitude">Non renseignée</div>
+  </div>
+
+  <hr>
+  
+  <h3>Dessin par coordonnées</h3>
+
+  <select id="shapeType">
+    <option value="polygon">Polygone</option>
+    <option value="polyline">Polyligne</option>
+    <option value="marker">Marqueur</option>
+    <option value="rectangle">Rectangle</option>
+    <option value="circle">Cercle</option>
+  </select>
+
+  <div id="pointInputs">
+    <input type="text" id="lat" placeholder="Latitude (ex: 36°48'12N)">
+    <input type="text" id="lng" placeholder="Longitude (ex: 10°10'55E)">
+    <button id="addPoint">Ajouter point</button>
+  </div>
+
+  <div id="circleInputs" style="display:none;">
+    <input type="number" id="radius" placeholder="Rayon (mètres)">
+  </div>
+
+  <button id="createShape">Créer la zone</button>
+
+  <ul id="pointsList"></ul>
+
+  <hr>
+  
+  <h3>Zones aériennes</h3>
+
+  <label><input type="checkbox" class="layerToggle" value="fir"> FIR</label>
+  <label><input type="checkbox" class="layerToggle" value="ctr"> CTR</label>
+  <label><input type="checkbox" class="layerToggle" value="restricted"> Restricted</label>
+  <label><input type="checkbox" class="layerToggle" value="danger"> Danger</label>
+  <label><input type="checkbox" class="layerToggle" value="prohibited"> Prohibited</label>
+  <label><input type="checkbox" class="layerToggle" value="limitzone"> Limit Zone</label>
+  <label><input type="checkbox" class="layerToggle" value="airports">Aéroports</label>
+
+  <hr>
+  
+  <h3>Gestion</h3>
+  <button id="saveGeoJSON">Enregistrer GeoJSON</button>
+  <button id="clearAll">Supprimer toutes les zones</button>
+  <button id="printMap">Imprimer la carte</button>
+
+</div>
+
+<div id="map">
+</div>
+
+
+<div id="droneStatus" style="
+    position: absolute;
+    top: 15px;
+    right: 50px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 16px;
+    border-radius: 12px;
+    width: 320px;
+    z-index: 1000;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25), 0 2px 8px rgba(0,0,0,0.15);
+    display: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+">
+</div>
+
+
+<!-- JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
+<script src="https://rawcdn.githack.com/rowanwins/leaflet-easyPrint/gh-pages/dist/bundle.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+
+    const brand = localStorage.getItem("brand");
+    const altitude = localStorage.getItem("altitude");
+
+    const brandElement = document.getElementById("brand");
+    const altitudeElement = document.getElementById("altitude");
+
+    if (brand && altitude) {
+        brandElement.textContent = brand;
+        altitudeElement.textContent = altitude + " m";
+    } else {
+        brandElement.textContent = "Non renseigné";
+        altitudeElement.textContent = "Non renseignée";
+    }
+
+});
+
+</script>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/map.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/draw.js"></script>
+<script src="assets/js/utils.js"></script>
+<script src="assets/js/manual-draw.js"></script>
+<script src="assets/js/airspace.js"></script>
+<script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+<script src="assets/js/intelligence.js"></script>
+<script src="assets/js/flightArea.js"></script>
+<script src="assets/js/control.js"></script>
+
+<script>
+// Gestion du menu mobile (drawer)
+document.addEventListener('DOMContentLoaded', function() {
+  const mobileToggle = document.getElementById('mobile-menu-toggle');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+
+  function openSidebar() {
+    sidebar.classList.add('active');
+    overlay.classList.add('active');
+    mobileToggle.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeSidebar() {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+    mobileToggle.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  mobileToggle.addEventListener('click', function() {
+    if (sidebar.classList.contains('active')) {
+      closeSidebar();
+    } else {
+      openSidebar();
+    }
+  });
+
+  overlay.addEventListener('click', closeSidebar);
+
+  // Fermer le sidebar lors du scroll sur mobile
+  let lastScrollTop = 0;
+  window.addEventListener('scroll', function() {
+    if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      if (Math.abs(scrollTop - lastScrollTop) > 50) {
+        closeSidebar();
+      }
+      lastScrollTop = scrollTop;
+    }
+  });
+});
+</script>
+
+
+</body>
+</html>
