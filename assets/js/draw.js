@@ -215,7 +215,8 @@ map.on(L.Draw.Event.CREATED, function (event) {
   drawControl._toolbars.draw.disable();
 
   if (!validation.allowed) {
-    showDroneStatus(validation.level, validation.name_zone, validation); // 👈 on affiche ici
+    showDroneStatus(validation.level, validation.name_zone, validation);
+    drawnItems.addLayer(layer);
     return;
   }
 

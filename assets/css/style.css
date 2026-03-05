@@ -150,6 +150,11 @@ input::placeholder {
   color: white;
 }
 
+#openDmsModal {
+  background: linear-gradient(135deg, #54447d 0%, #823276 100%);
+  color: white;
+}
+  
 #addPoint:hover,
 #createShape:hover {
   background: linear-gradient(135deg, #823276 0%, #a71057 100%);
