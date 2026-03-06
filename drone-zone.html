@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8" />
   <title>No Drone Zone – Web</title>
@@ -13,95 +14,96 @@
   <!-- CSS -->
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
+
 <body>
 
-<!-- Bouton hamburger pour mobile -->
-<button id="mobile-menu-toggle" class="hamburger-btn" aria-label="Toggle menu">
-  <span></span>
-  <span></span>
-  <span></span>
-</button>
+  <!-- Bouton hamburger pour mobile -->
+  <button id="mobile-menu-toggle" class="hamburger-btn" aria-label="Toggle menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
 
-<!-- Overlay pour fermer le menu -->
-<div id="sidebar-overlay"></div>
+  <!-- Overlay pour fermer le menu -->
+  <div id="sidebar-overlay"></div>
 
-<div id="sidebar">
-  <h2>NO DRONE ZONE</h2>
+  <div id="sidebar">
+    <h2>NO DRONE ZONE</h2>
 
-  <button id="btn-road">🗺️ Carte routière</button>
-  <button id="btn-sat">🛰️ Satellite</button>
-  <button id="btn-locate">📍 Ma position</button>
+    <button id="btn-road">🗺️ Carte routière</button>
+    <button id="btn-sat">🛰️ Satellite</button>
+    <button id="btn-locate">📍 Ma position</button>
 
-  <hr>
-  
-  <h3>Informations du drone</h3>
-  <div class="info-card">
-    <div class="info-label">🚁 Marque du drone</div>
-    <div class="info-value" id="brand">Non renseigné</div>
+    <hr>
+
+    <h3>Informations du drone</h3>
+    <div class="info-card">
+      <div class="info-label">🚁 Marque du drone</div>
+      <div class="info-value" id="brand">Non renseigné</div>
+    </div>
+    <div class="info-card">
+      <div class="info-label">📏 Hauteur de vol prévue</div>
+      <div class="info-value" id="altitude">Non renseignée</div>
+    </div>
+
+    <hr>
+
+    <h3>Dessin par coordonnées</h3>
+
+    <select id="shapeType">
+      <option value="polygon">Polygone</option>
+      <option value="polyline">Polyligne</option>
+      <option value="marker">Marqueur</option>
+      <option value="rectangle">Rectangle</option>
+      <option value="circle">Cercle</option>
+    </select>
+
+    <div id="pointInputs">
+      <input type="text" id="lat" placeholder="Latitude (ex: 36°48'12N)">
+      <input type="text" id="lng" placeholder="Longitude (ex: 10°10'55E)">
+      <button id="addPoint">Ajouter point</button>
+    </div>
+
+    <div id="circleInputs" style="display:none;">
+      <input type="number" id="radius" placeholder="Rayon (mètres)">
+    </div>
+
+    <button id="createShape">Créer la zone</button>
+
+    <ul id="pointsList"></ul>
+
+
+    <hr>
+
+    <h3>Dessin par convertisseur DMS</h3>
+
+    <button id="openDmsModal">🧭 Convertisseur DMS</button>
+
+    <hr>
+
+    <h3>Zones aériennes</h3>
+
+    <label><input type="checkbox" class="layerToggle" value="fir"> FIR</label>
+    <label><input type="checkbox" class="layerToggle" value="ctr"> CTR</label>
+    <label><input type="checkbox" class="layerToggle" value="restricted"> Restricted</label>
+    <label><input type="checkbox" class="layerToggle" value="danger"> Danger</label>
+    <label><input type="checkbox" class="layerToggle" value="prohibited"> Prohibited</label>
+    <label><input type="checkbox" class="layerToggle" value="limitzone"> Limit Zone</label>
+    <label><input type="checkbox" class="layerToggle" value="airports">Aéroports</label>
+
+    <hr>
+
+    <h3>Gestion</h3>
+    <button id="saveGeoJSON">Enregistrer GeoJSON</button>
+    <button id="clearAll">Supprimer toutes les zones</button>
+    <button id="printMap">Imprimer la carte</button>
+
+
   </div>
-  <div class="info-card">
-    <div class="info-label">📏 Hauteur de vol prévue</div>
-    <div class="info-value" id="altitude">Non renseignée</div>
-  </div>
 
-  <hr>
-  
-  <h3>Dessin par coordonnées</h3>
+  <div id="map"></div>
 
-  <select id="shapeType">
-    <option value="polygon">Polygone</option>
-    <option value="polyline">Polyligne</option>
-    <option value="marker">Marqueur</option>
-    <option value="rectangle">Rectangle</option>
-    <option value="circle">Cercle</option>
-  </select>
-
-  <div id="pointInputs">
-    <input type="text" id="lat" placeholder="Latitude (ex: 36°48'12N)">
-    <input type="text" id="lng" placeholder="Longitude (ex: 10°10'55E)">
-    <button id="addPoint">Ajouter point</button>
-  </div>
-
-  <div id="circleInputs" style="display:none;">
-    <input type="number" id="radius" placeholder="Rayon (mètres)">
-  </div>
-
-  <button id="createShape">Créer la zone</button>
-
-  <ul id="pointsList"></ul>
-
-
-  <hr>
-  
-  <h3>Dessin par convertisseur DMS</h3>
-
-  <button id="openDmsModal">🧭 Convertisseur DMS</button>
-
-  <hr>
-  
-  <h3>Zones aériennes</h3>
-
-  <label><input type="checkbox" class="layerToggle" value="fir"> FIR</label>
-  <label><input type="checkbox" class="layerToggle" value="ctr"> CTR</label>
-  <label><input type="checkbox" class="layerToggle" value="restricted"> Restricted</label>
-  <label><input type="checkbox" class="layerToggle" value="danger"> Danger</label>
-  <label><input type="checkbox" class="layerToggle" value="prohibited"> Prohibited</label>
-  <label><input type="checkbox" class="layerToggle" value="limitzone"> Limit Zone</label>
-  <label><input type="checkbox" class="layerToggle" value="airports">Aéroports</label>
-
-  <hr>
-  
-  <h3>Gestion</h3>
-  <button id="saveGeoJSON">Enregistrer GeoJSON</button>
-  <button id="clearAll">Supprimer toutes les zones</button>
-  <button id="printMap">Imprimer la carte</button>
-  
-
-</div>
-
-<div id="map"></div>
-
-<div id="droneStatus" style="
+  <div id="droneStatus" style="
     position: absolute;
     top: 15px;
     right: 50px;
@@ -115,12 +117,12 @@
     display: none;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 ">
-</div>
+  </div>
 
-<!-- ═══════════════════════════════════════════════════════
+  <!-- ═══════════════════════════════════════════════════════
      MODAL DMS CONVERTER
      ═══════════════════════════════════════════════════════ -->
-<div id="dmsModal" style="
+  <div id="dmsModal" style="
   display: none;
   position: fixed; inset: 0; z-index: 2000;
   background: rgba(0,0,0,0.75);
@@ -128,7 +130,7 @@
   align-items: center;
   justify-content: center;
 ">
-  <div style="
+    <div style="
     background: linear-gradient(180deg, #2f4858 0%, #1a1a2e 100%);
     border-radius: 12px;
     padding: 32px 28px;
@@ -140,8 +142,8 @@
     animation: dmsSlideIn 0.35s ease forwards;
   ">
 
-    <!-- Bouton fermer -->
-    <button onclick="closeDmsModal()" style="
+      <!-- Bouton fermer -->
+      <button onclick="closeDmsModal()" style="
       position: absolute; top: 14px; right: 14px;
       background: none; border: none;
       color: rgba(255,255,255,0.5); font-size: 20px;
@@ -150,409 +152,475 @@
       box-shadow: none;
     " onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">✕</button>
 
-    <!-- Header -->
-    <div style="text-align:center; margin-bottom:24px; padding-bottom:18px; border-bottom:2px solid #b70028;">
-      <div style="color:#fff; font-size:20px; font-weight:700; letter-spacing:1px; text-shadow:2px 2px 4px rgba(0,0,0,0.3); margin-bottom:4px;">
-        🧭 Convertisseur DMS Aviation
+      <!-- Header -->
+      <div style="text-align:center; margin-bottom:24px; padding-bottom:18px; border-bottom:2px solid #b70028;">
+        <div
+          style="color:#fff; font-size:20px; font-weight:700; letter-spacing:1px; text-shadow:2px 2px 4px rgba(0,0,0,0.3); margin-bottom:4px;">
+          🧭 Convertisseur DMS Aviation
+        </div>
+        <div style="color:rgba(255,255,255,0.45); font-size:11px; text-transform:uppercase; letter-spacing:1.5px;">
+          EPSG:4326 · Latitude / Longitude
+        </div>
       </div>
-      <div style="color:rgba(255,255,255,0.45); font-size:11px; text-transform:uppercase; letter-spacing:1.5px;">
-        EPSG:4326 · Latitude / Longitude
-      </div>
-    </div>
 
-    <!-- Sélecteur de forme (miroir du sidebar) -->
-    <div style="margin-bottom:16px;">
-      <div style="color:#fff; font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;">
-        Type de zone
-      </div>
-      <select id="dmsShapeType" style="
+      <!-- Sélecteur de forme (miroir du sidebar) -->
+      <div style="margin-bottom:16px;">
+        <div
+          style="color:#fff; font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;">
+          Type de zone
+        </div>
+        <select id="dmsShapeType" style="
         width:100%; padding:10px 12px; margin-bottom:0;
         border:1px solid rgba(255,255,255,0.1); border-radius:6px;
         background:rgba(255,255,255,0.05); color:#fff;
         font-size:14px; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
         transition:all 0.3s;
       ">
-        <option value="polygon">Polygone</option>
-        <option value="polyline">Polyligne</option>
-        <option value="marker">Marqueur</option>
-        <option value="rectangle">Rectangle</option>
-        <option value="circle">Cercle</option>
-      </select>
-    </div>
+          <option value="polygon">Polygone</option>
+          <option value="polyline">Polyligne</option>
+          <option value="marker">Marqueur</option>
+          <option value="rectangle">Rectangle</option>
+          <option value="circle">Cercle</option>
+        </select>
+      </div>
 
-    <!-- Rayon (cercle) -->
-    <div id="dmsRadiusRow" style="display:none; margin-bottom:14px;">
-      <div style="color:rgba(255,255,255,0.55); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:7px;">Rayon (mètres)</div>
-      <input type="number" id="dmsRadius" placeholder="Ex: 500" style="
+      <!-- Rayon (cercle) -->
+      <div id="dmsRadiusRow" style="display:none; margin-bottom:14px;">
+        <div
+          style="color:rgba(255,255,255,0.55); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:7px;">
+          Rayon (mètres)</div>
+        <input type="number" id="dmsRadius" placeholder="Ex: 500" style="
         width:100%; padding:10px 12px;
         border:1px solid rgba(255,255,255,0.1); border-radius:6px;
         background:rgba(255,255,255,0.05); color:#fff;
         font-size:14px; font-family:inherit; outline:none; box-sizing:border-box;
         transition:all 0.3s;
       " onfocus="this.style.borderColor='#b70028';this.style.boxShadow='0 0 0 3px rgba(183,0,40,0.2)'"
-         onblur="this.style.borderColor='rgba(255,255,255,0.1)';this.style.boxShadow='none'">
-    </div>
+          onblur="this.style.borderColor='rgba(255,255,255,0.1)';this.style.boxShadow='none'">
+      </div>
 
-    <!-- Section saisie coordonnées -->
-    <div style="color:#fff; font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px;">
-      Coordonnées DMS
-    </div>
+      <!-- Section saisie coordonnées -->
+      <div
+        style="color:#fff; font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px;">
+        Coordonnées DMS
+      </div>
 
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:4px;">
-      <div>
-        <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:7px;">Latitude</div>
-        <input id="dmsLat" type="text" placeholder="364956.1N" style="
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:4px;">
+        <div>
+          <div
+            style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:7px;">
+            Latitude</div>
+          <input id="dmsLat" type="text" placeholder="364956.1N" style="
           width:100%; padding:10px 12px;
           border:1px solid rgba(255,255,255,0.1); border-radius:6px;
           background:rgba(255,255,255,0.05); color:#fff;
           font-size:14px; font-family:inherit; outline:none; box-sizing:border-box; transition:all 0.3s;
         " onfocus="this.style.borderColor='#b70028';this.style.background='rgba(255,255,255,0.08)';this.style.boxShadow='0 0 0 3px rgba(183,0,40,0.2)'"
-           onblur="this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.05)';this.style.boxShadow='none'">
-      </div>
-      <div>
-        <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:7px;">Longitude</div>
-        <input id="dmsLng" type="text" placeholder="0101337.9E" style="
+            onblur="this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.05)';this.style.boxShadow='none'">
+        </div>
+        <div>
+          <div
+            style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:7px;">
+            Longitude</div>
+          <input id="dmsLng" type="text" placeholder="0101337.9E" style="
           width:100%; padding:10px 12px;
           border:1px solid rgba(255,255,255,0.1); border-radius:6px;
           background:rgba(255,255,255,0.05); color:#fff;
           font-size:14px; font-family:inherit; outline:none; box-sizing:border-box; transition:all 0.3s;
         " onfocus="this.style.borderColor='#b70028';this.style.background='rgba(255,255,255,0.08)';this.style.boxShadow='0 0 0 3px rgba(183,0,40,0.2)'"
-           onblur="this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.05)';this.style.boxShadow='none'">
+            onblur="this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.05)';this.style.boxShadow='none'">
+        </div>
       </div>
-    </div>
 
-    <!-- Error conversion -->
-    <div id="dmsConvertError" style="
+      <!-- Error conversion -->
+      <div id="dmsConvertError" style="
       font-size:12px; color:#ff6b6b; display:none;
       padding:8px 12px; margin:10px 0 4px;
       background:rgba(255,107,107,0.1); border-left:3px solid #ff6b6b; border-radius:4px;
     ">⚠ Format invalide. Exemple : 364956.1N / 0101337.9E</div>
 
-    <hr style="border:none;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);margin:16px 0;">
+      <hr
+        style="border:none;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);margin:16px 0;">
 
-    <!-- Bouton Ajouter point -->
-    <button onclick="dmsAddPoint()" style="
+      <!-- Bouton Ajouter point -->
+      <button onclick="dmsAddPoint()" style="
       width:100%; padding:12px 16px; margin-bottom:10px;
       background:linear-gradient(135deg,#54447d,#823276);
       color:#fff; border:none; border-radius:8px;
       font-size:14px; font-weight:600; font-family:inherit;
       cursor:pointer; transition:all 0.3s; box-shadow:0 2px 8px rgba(0,0,0,0.2);
     " onmouseover="this.style.background='linear-gradient(135deg,#823276,#a71057)';this.style.transform='translateY(-2px)'"
-       onmouseout="this.style.background='linear-gradient(135deg,#54447d,#823276)';this.style.transform='translateY(0)'">
-      + Ajouter le point
-    </button>
+        onmouseout="this.style.background='linear-gradient(135deg,#54447d,#823276)';this.style.transform='translateY(0)'">
+        + Ajouter le point
+      </button>
 
-    <!-- Liste des points ajoutés -->
-    <ul id="dmsPointsList" style="
+      <!-- Liste des points ajoutés -->
+      <ul id="dmsPointsList" style="
       list-style:none; padding:0; margin-bottom:12px;
       max-height:130px; overflow-y:auto;
     "></ul>
 
-    <!-- Error zone -->
-    <div id="dmsZoneError" style="
+      <!-- Error zone -->
+      <div id="dmsZoneError" style="
       font-size:12px; color:#ff6b6b; display:none;
       padding:8px 12px; margin-bottom:10px;
       background:rgba(255,107,107,0.1); border-left:3px solid #ff6b6b; border-radius:4px;
     "></div>
 
-    <!-- Bouton Créer zone -->
-    <button onclick="dmsCreateZone()" style="
+      <!-- Bouton Créer zone -->
+      <button onclick="dmsCreateZone()" style="
       width:100%; padding:12px 16px; margin-bottom:10px;
       background:linear-gradient(135deg,#b70028,#a71057);
       color:#fff; border:none; border-radius:8px;
       font-size:14px; font-weight:600; font-family:inherit;
       cursor:pointer; transition:all 0.3s; box-shadow:0 2px 8px rgba(0,0,0,0.2);
     " onmouseover="this.style.background='linear-gradient(135deg,#a71057,#823276)';this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(183,0,40,0.4)'"
-       onmouseout="this.style.background='linear-gradient(135deg,#b70028,#a71057)';this.style.transform='translateY(0)';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.2)'">
-      🗺️ Créer la zone
-    </button>
+        onmouseout="this.style.background='linear-gradient(135deg,#b70028,#a71057)';this.style.transform='translateY(0)';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.2)'">
+        🗺️ Créer la zone
+      </button>
 
-    <!-- Résumé points en bas -->
-    <div id="dmsPointsCount" style="
+      <!-- Résumé points en bas -->
+      <div id="dmsPointsCount" style="
       text-align:center; font-size:12px;
       color:rgba(255,255,255,0.4); margin-top:4px;
     ">Aucun point ajouté</div>
 
+    </div>
   </div>
-</div>
 
-<style>
-@keyframes dmsSlideIn {
-  from { opacity:0; transform:scale(0.96) translateY(12px); }
-  to   { opacity:1; transform:scale(1)    translateY(0); }
-}
-/* Scrollbar liste points modal */
-#dmsPointsList::-webkit-scrollbar { width:6px; }
-#dmsPointsList::-webkit-scrollbar-track { background:rgba(255,255,255,0.05); border-radius:3px; }
-#dmsPointsList::-webkit-scrollbar-thumb { background:#b70028; border-radius:3px; }
-/* Option select dans modal */
-#dmsShapeType option { background:#2f4858; color:#fff; }
-</style>
+  <style>
+    @keyframes dmsSlideIn {
+      from {
+        opacity: 0;
+        transform: scale(0.96) translateY(12px);
+      }
 
-<!-- JS -->
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
-<script src="https://rawcdn.githack.com/rowanwins/leaflet-easyPrint/gh-pages/dist/bundle.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const brand    = localStorage.getItem("brand");
-    const altitude = localStorage.getItem("altitude");
-    const brandEl  = document.getElementById("brand");
-    const altEl    = document.getElementById("altitude");
-    if (brand && altitude) {
-      brandEl.textContent = brand;
-      altEl.textContent   = altitude + " m";
-    } else {
-      brandEl.textContent = "Non renseigné";
-      altEl.textContent   = "Non renseignée";
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
     }
-  });
-</script>
 
-<script src="assets/js/config.js"></script>
-<script src="assets/js/map.js"></script>
-<script src="assets/js/ui.js"></script>
-<script src="assets/js/draw.js"></script>
-<script src="assets/js/utils.js"></script>
-<script src="assets/js/manual-draw.js"></script>
-<script src="assets/js/airspace.js"></script>
-<script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
-<script src="assets/js/intelligence.js"></script>
-<script src="assets/js/flightArea.js"></script>
-<script src="assets/js/control.js"></script>
+    /* Scrollbar liste points modal */
+    #dmsPointsList::-webkit-scrollbar {
+      width: 6px;
+    }
 
-<!-- ═══════════════════════════════════════════════════════
+    #dmsPointsList::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 3px;
+    }
+
+    #dmsPointsList::-webkit-scrollbar-thumb {
+      background: #b70028;
+      border-radius: 3px;
+    }
+
+    /* Option select dans modal */
+    #dmsShapeType option {
+      background: #2f4858;
+      color: #fff;
+    }
+  </style>
+
+  <!-- JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
+  <script src="https://rawcdn.githack.com/rowanwins/leaflet-easyPrint/gh-pages/dist/bundle.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const brand = localStorage.getItem("brand");
+      const altitude = localStorage.getItem("altitude");
+      const brandEl = document.getElementById("brand");
+      const altEl = document.getElementById("altitude");
+      if (brand && altitude) {
+        brandEl.textContent = brand;
+        altEl.textContent = altitude + " m";
+      } else {
+        brandEl.textContent = "Non renseigné";
+        altEl.textContent = "Non renseignée";
+      }
+    });
+  </script>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/map.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/draw.js"></script>
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/manual-draw.js"></script>
+  <script src="assets/js/airspace.js"></script>
+  <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+  <script src="assets/js/intelligence.js"></script>
+  <script src="assets/js/flightArea.js"></script>
+  <script src="assets/js/control.js"></script>
+
+  <!-- ═══════════════════════════════════════════════════════
      DMS MODAL — Logique
      ═══════════════════════════════════════════════════════ -->
-<script>
-// ── Helpers DMS ───────────────────────────────────────────
-function _dmsToDecimal(dms) {
-  const dir = dms.slice(-1).toUpperCase();
-  const val = dms.slice(0, -1);
-  let deg, min, sec;
-  if (val.length <= 8) {
-    deg = parseInt(val.slice(0, 2));
-    min = parseInt(val.slice(2, 4));
-    sec = parseFloat(val.slice(4));
-  } else {
-    deg = parseInt(val.slice(0, 3));
-    min = parseInt(val.slice(3, 5));
-    sec = parseFloat(val.slice(5));
-  }
-  if (isNaN(deg) || isNaN(min) || isNaN(sec)) throw new Error('Invalid DMS');
-  let decimal = deg + (min / 60) + (sec / 3600);
-  if (dir === 'S' || dir === 'W') decimal *= -1;
-  return decimal;
-}
+  <script>
+    // ── Helpers DMS ───────────────────────────────────────────
+    function _dmsToDecimal(dms) {
+      if (!dms) return NaN;
 
-// ── State modal ───────────────────────────────────────────
-let dmsPoints = [];
+      // Identifier la direction (N, S, E, O/W)
+      const dirMatch = dms.match(/[NSEOW]/i);
+      if (!dirMatch) return NaN;
+      let dir = dirMatch[0].toUpperCase();
+      if (dir === 'O') dir = 'W';
 
-function _renderDmsPoints() {
-  const ul    = document.getElementById('dmsPointsList');
-  const count = document.getElementById('dmsPointsCount');
-  ul.innerHTML = '';
-  dmsPoints.forEach((p, i) => {
-    const li = document.createElement('li');
-    li.style.cssText = `
+      // Nettoyer la chaîne
+      const cleanStr = dms.replace(/[NSEOW]/i, '').trim();
+
+      let deg, min, sec;
+
+      // Cas 1 : Format avec séparateurs
+      if (/[\s°'"]/.test(cleanStr)) {
+        const parts = cleanStr.split(/[\s°'"]+/).filter(p => p.length > 0);
+        deg = parseFloat(parts[0] || 0);
+        min = parseFloat(parts[1] || 0);
+        sec = parseFloat(parts[2] || 0);
+      }
+      // Cas 2 : Format compact aéronautique
+      else {
+        const dotIndex = cleanStr.indexOf('.');
+        let integerPart = dotIndex !== -1 ? cleanStr.slice(0, dotIndex) : cleanStr;
+        let decimalPart = dotIndex !== -1 ? cleanStr.slice(dotIndex) : "";
+
+        if (integerPart.length >= 4) {
+          const sInt = integerPart.slice(-2);
+          const mInt = integerPart.slice(-4, -2);
+          const dInt = integerPart.slice(0, -4);
+
+          deg = parseInt(dInt, 10) || 0;
+          min = parseInt(mInt, 10) || 0;
+          sec = parseFloat(sInt + decimalPart) || 0;
+        } else {
+          return NaN;
+        }
+      }
+
+      let decimal = deg + (min / 60) + (sec / 3600);
+      if (dir === 'S' || dir === 'W') decimal *= -1;
+      return decimal;
+    }
+
+    // ── State modal ───────────────────────────────────────────
+    let dmsPoints = [];
+
+    function _renderDmsPoints() {
+      const ul = document.getElementById('dmsPointsList');
+      const count = document.getElementById('dmsPointsCount');
+      ul.innerHTML = '';
+      dmsPoints.forEach((p, i) => {
+        const li = document.createElement('li');
+        li.style.cssText = `
       background:rgba(255,255,255,0.05); padding:7px 12px; margin-bottom:6px;
       border-radius:6px; color:#fff; font-size:13px;
       border-left:3px solid #b70028; transition:all 0.2s;
       display:flex; justify-content:space-between; align-items:center;
     `;
-    li.innerHTML = `
+        li.innerHTML = `
       <span>📍 ${p[0].toFixed(5)}, ${p[1].toFixed(5)}</span>
       <span onclick="dmsRemovePoint(${i})" style="cursor:pointer;color:rgba(255,255,255,0.4);font-size:16px;padding-left:8px;" onmouseover="this.style.color='#ff6b6b'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">×</span>
     `;
-    ul.appendChild(li);
-  });
-  count.textContent = dmsPoints.length === 0
-    ? 'Aucun point ajouté'
-    : `${dmsPoints.length} point${dmsPoints.length > 1 ? 's' : ''} ajouté${dmsPoints.length > 1 ? 's' : ''}`;
-}
-
-function dmsRemovePoint(i) {
-  dmsPoints.splice(i, 1);
-  _renderDmsPoints();
-}
-
-// ── Ouvrir / Fermer ───────────────────────────────────────
-document.getElementById('openDmsModal').addEventListener('click', function () {
-  const m = document.getElementById('dmsModal');
-  m.style.display = 'flex';
-  document.getElementById('dmsLat').focus();
-});
-
-function closeDmsModal() {
-  document.getElementById('dmsModal').style.display = 'none';
-  document.getElementById('dmsConvertError').style.display = 'none';
-  document.getElementById('dmsZoneError').style.display = 'none';
-  document.getElementById('dmsLat').value = '';
-  document.getElementById('dmsLng').value = '';
-  document.getElementById('dmsRadius').value = '';
-  dmsPoints = [];
-  _renderDmsPoints();
-}
-
-document.getElementById('dmsModal').addEventListener('click', function (e) {
-  if (e.target === this) closeDmsModal();
-});
-
-document.addEventListener('keydown', function (e) {
-  if (e.key === 'Escape' && document.getElementById('dmsModal').style.display === 'flex')
-    closeDmsModal();
-});
-
-// Afficher/cacher le champ rayon selon le type
-document.getElementById('dmsShapeType').addEventListener('change', function () {
-  document.getElementById('dmsRadiusRow').style.display =
-    this.value === 'circle' ? 'block' : 'none';
-});
-
-// ── Ajouter un point ──────────────────────────────────────
-function dmsAddPoint() {
-  const latStr = document.getElementById('dmsLat').value.trim();
-  const lngStr = document.getElementById('dmsLng').value.trim();
-  const errEl  = document.getElementById('dmsConvertError');
-
-  try {
-    const lat = _dmsToDecimal(latStr);
-    const lng = _dmsToDecimal(lngStr);
-    if (isNaN(lat) || isNaN(lng)) throw new Error();
-
-    dmsPoints.push([lat, lng]);
-    _renderDmsPoints();
-
-    // Vider les champs pour saisie suivante
-    document.getElementById('dmsLat').value = '';
-    document.getElementById('dmsLng').value = '';
-    document.getElementById('dmsLat').focus();
-    errEl.style.display = 'none';
-    document.getElementById('dmsZoneError').style.display = 'none';
-  } catch {
-    errEl.style.display = 'block';
-  }
-}
-
-// ── Créer la zone (même logique que createShape) ──────────
-function dmsCreateZone() {
-  const shapeType = document.getElementById('dmsShapeType').value;
-  const errEl     = document.getElementById('dmsZoneError');
-
-  if (dmsPoints.length === 0) {
-    errEl.textContent = '⚠ Ajoutez au moins un point avant de créer la zone.';
-    errEl.style.display = 'block';
-    return;
-  }
-
-  let layer;
-
-  switch (shapeType) {
-    case 'marker':
-      layer = L.marker(dmsPoints[0]);
-      break;
-
-    case 'polyline':
-      layer = L.polyline(dmsPoints);
-      break;
-
-    case 'polygon':
-      layer = L.polygon(dmsPoints);
-      break;
-
-    case 'rectangle':
-      if (dmsPoints.length < 2) {
-        errEl.textContent = '⚠ Rectangle = 2 points minimum.';
-        errEl.style.display = 'block';
-        return;
-      }
-      layer = L.rectangle(dmsPoints);
-      break;
-
-    case 'circle':
-      const radius = parseFloat(document.getElementById('dmsRadius').value);
-      if (!radius) {
-        errEl.textContent = '⚠ Rayon requis pour un cercle.';
-        errEl.style.display = 'block';
-        return;
-      }
-      layer = L.circle(dmsPoints[0], { radius });
-      break;
-  }
-
-  errEl.style.display = 'none';
-
-  // ── Validation vol (même logique que createShape) ─────
-  const geojson    = layer.toGeoJSON();
-  const validation = validateFlightArea(geojson);
-
-  if (!validation.allowed) {
-    showDroneStatus(validation.level, validation.name_zone, validation);
-    closeDmsModal();
-    return;
-  }
-
-  if (validation.requiresAuthorization) {
-    showDroneStatus(validation.level, validation.name_zone, validation);
-    drawnItems.addLayer(layer);
-    map.fitBounds(layer.getBounds ? layer.getBounds() : L.latLngBounds([dmsPoints[0]]));
-    closeDmsModal();
-    return;
-  }
-
-  drawnItems.addLayer(layer);
-  map.fitBounds(layer.getBounds ? layer.getBounds() : L.latLngBounds([dmsPoints[0]]));
-  closeDmsModal();
-}
-
-// Entrée clavier dans les champs DMS
-document.getElementById('dmsLat').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') { e.preventDefault(); document.getElementById('dmsLng').focus(); }
-});
-document.getElementById('dmsLng').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') { e.preventDefault(); dmsAddPoint(); }
-});
-</script>
-
-<!-- Menu mobile (drawer) -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const mobileToggle = document.getElementById('mobile-menu-toggle');
-  const sidebar      = document.getElementById('sidebar');
-  const overlay      = document.getElementById('sidebar-overlay');
-
-  function openSidebar() {
-    sidebar.classList.add('active');
-    overlay.classList.add('active');
-    mobileToggle.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeSidebar() {
-    sidebar.classList.remove('active');
-    overlay.classList.remove('active');
-    mobileToggle.classList.remove('active');
-    document.body.style.overflow = '';
-  }
-
-  mobileToggle.addEventListener('click', function() {
-    sidebar.classList.contains('active') ? closeSidebar() : openSidebar();
-  });
-
-  overlay.addEventListener('click', closeSidebar);
-
-  let lastScrollTop = 0;
-  window.addEventListener('scroll', function() {
-    if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      if (Math.abs(scrollTop - lastScrollTop) > 50) closeSidebar();
-      lastScrollTop = scrollTop;
+        ul.appendChild(li);
+      });
+      count.textContent = dmsPoints.length === 0
+        ? 'Aucun point ajouté'
+        : `${dmsPoints.length} point${dmsPoints.length > 1 ? 's' : ''} ajouté${dmsPoints.length > 1 ? 's' : ''}`;
     }
-  });
-});
-</script>
+
+    function dmsRemovePoint(i) {
+      dmsPoints.splice(i, 1);
+      _renderDmsPoints();
+    }
+
+    // ── Ouvrir / Fermer ───────────────────────────────────────
+    document.getElementById('openDmsModal').addEventListener('click', function () {
+      const m = document.getElementById('dmsModal');
+      m.style.display = 'flex';
+      document.getElementById('dmsLat').focus();
+    });
+
+    function closeDmsModal() {
+      document.getElementById('dmsModal').style.display = 'none';
+      document.getElementById('dmsConvertError').style.display = 'none';
+      document.getElementById('dmsZoneError').style.display = 'none';
+      document.getElementById('dmsLat').value = '';
+      document.getElementById('dmsLng').value = '';
+      document.getElementById('dmsRadius').value = '';
+      dmsPoints = [];
+      _renderDmsPoints();
+    }
+
+    document.getElementById('dmsModal').addEventListener('click', function (e) {
+      if (e.target === this) closeDmsModal();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && document.getElementById('dmsModal').style.display === 'flex')
+        closeDmsModal();
+    });
+
+    // Afficher/cacher le champ rayon selon le type
+    document.getElementById('dmsShapeType').addEventListener('change', function () {
+      document.getElementById('dmsRadiusRow').style.display =
+        this.value === 'circle' ? 'block' : 'none';
+    });
+
+    // ── Ajouter un point ──────────────────────────────────────
+    function dmsAddPoint() {
+      const latStr = document.getElementById('dmsLat').value.trim();
+      const lngStr = document.getElementById('dmsLng').value.trim();
+      const errEl = document.getElementById('dmsConvertError');
+
+      try {
+        const lat = _dmsToDecimal(latStr);
+        const lng = _dmsToDecimal(lngStr);
+        if (isNaN(lat) || isNaN(lng)) throw new Error();
+
+        dmsPoints.push([lat, lng]);
+        _renderDmsPoints();
+
+        // Vider les champs pour saisie suivante
+        document.getElementById('dmsLat').value = '';
+        document.getElementById('dmsLng').value = '';
+        document.getElementById('dmsLat').focus();
+        errEl.style.display = 'none';
+        document.getElementById('dmsZoneError').style.display = 'none';
+      } catch {
+        errEl.style.display = 'block';
+      }
+    }
+
+    // ── Créer la zone (même logique que createShape) ──────────
+    function dmsCreateZone() {
+      const shapeType = document.getElementById('dmsShapeType').value;
+      const errEl = document.getElementById('dmsZoneError');
+
+      if (dmsPoints.length === 0) {
+        errEl.textContent = '⚠ Ajoutez au moins un point avant de créer la zone.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      let layer;
+
+      switch (shapeType) {
+        case 'marker':
+          layer = L.marker(dmsPoints[0]);
+          break;
+
+        case 'polyline':
+          layer = L.polyline(dmsPoints, DRAW_STYLE);
+          break;
+
+        case 'polygon':
+          layer = L.polygon(dmsPoints, DRAW_STYLE);
+          break;
+
+        case 'rectangle':
+          if (dmsPoints.length < 2) {
+            errEl.textContent = '⚠ Rectangle = 2 points minimum.';
+            errEl.style.display = 'block';
+            return;
+          }
+          layer = L.rectangle(dmsPoints, DRAW_STYLE);
+          break;
+
+        case 'circle':
+          const radius = parseFloat(document.getElementById('dmsRadius').value);
+          if (!radius) {
+            errEl.textContent = '⚠ Rayon requis pour un cercle.';
+            errEl.style.display = 'block';
+            return;
+          }
+          layer = L.circle(dmsPoints[0], { radius, ...DRAW_STYLE });
+          break;
+      }
+
+      errEl.style.display = 'none';
+
+      // ── Toujours ajouter la zone à la carte ─────────────────
+      drawnItems.addLayer(layer);
+      if (layer.getBounds) {
+        map.fitBounds(layer.getBounds());
+      } else if (layer.getLatLng) {
+        map.setView(layer.getLatLng(), 15);
+      }
+
+      // ── Validation vol ─────────────────────────────────────
+      let geojson;
+      if (layer instanceof L.Circle) {
+        const center = layer.getLatLng();
+        const radiusMeters = layer.getRadius();
+        geojson = turf.circle(
+          [center.lng, center.lat],
+          radiusMeters / 1000, // Turf veut kilomètres
+          { steps: 64, units: 'kilometers' }
+        );
+      } else {
+        geojson = layer.toGeoJSON();
+      }
+
+      const validation = validateFlightArea(geojson);
+
+      // Afficher le status (alerte ou succès)
+      showDroneStatus(validation.level, validation.name_zone, validation);
+
+      closeDmsModal();
+    }
+
+    // Entrée clavier dans les champs DMS
+    document.getElementById('dmsLat').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); document.getElementById('dmsLng').focus(); }
+    });
+    document.getElementById('dmsLng').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); dmsAddPoint(); }
+    });
+  </script>
+
+  <!-- Menu mobile (drawer) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const mobileToggle = document.getElementById('mobile-menu-toggle');
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+
+      function openSidebar() {
+        sidebar.classList.add('active');
+        overlay.classList.add('active');
+        mobileToggle.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeSidebar() {
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+        mobileToggle.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      mobileToggle.addEventListener('click', function () {
+        sidebar.classList.contains('active') ? closeSidebar() : openSidebar();
+      });
+
+      overlay.addEventListener('click', closeSidebar);
+
+      let lastScrollTop = 0;
+      window.addEventListener('scroll', function () {
+        if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          if (Math.abs(scrollTop - lastScrollTop) > 50) closeSidebar();
+          lastScrollTop = scrollTop;
+        }
+      });
+    });
+  </script>
 
 </body>
+
 </html>

@@ -1,378 +1,447 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Convertisseur DMS → Coordonnées</title>
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Convertisseur DMS → Coordonnées</title>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #1a1a2e;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #1a1a2e;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
 
-  .card {
-    background: linear-gradient(180deg, #2f4858 0%, #1a1a2e 100%);
-    border-radius: 12px;
-    padding: 36px 32px;
-    width: 100%;
-    max-width: 460px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-    animation: slideIn 0.4s ease forwards;
-  }
+    .card {
+      background: linear-gradient(180deg, #2f4858 0%, #1a1a2e 100%);
+      border-radius: 12px;
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 460px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      animation: slideIn 0.4s ease forwards;
+    }
 
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateX(-20px); }
-    to   { opacity: 1; transform: translateX(0); }
-  }
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
 
-  .card-header {
-    text-align: center;
-    margin-bottom: 28px;
-    padding-bottom: 20px;
-    border-bottom: 2px solid #b70028;
-  }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
 
-  .card-header h2 {
-    color: #ffffff;
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    margin-bottom: 4px;
-  }
+    .card-header {
+      text-align: center;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #b70028;
+    }
 
-  .card-header p {
-    color: rgba(255,255,255,0.45);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-  }
+    .card-header h2 {
+      color: #ffffff;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      margin-bottom: 4px;
+    }
 
-  .section-title {
-    color: #ffffff;
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 14px;
-  }
+    .card-header p {
+      color: rgba(255, 255, 255, 0.45);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
 
-  .input-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
+    .section-title {
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
 
-  .input-group > label {
-    display: block;
-    font-size: 11px;
-    font-weight: 600;
-    color: rgba(255,255,255,0.55);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    margin-bottom: 7px;
-    cursor: default;
-    padding: 0;
-    background: none;
-    border-radius: 0;
-  }
-  .input-group > label:hover { background: none; transform: none; }
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
 
-  input[type="text"] {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 6px;
-    background: rgba(255,255,255,0.05);
-    color: #ffffff;
-    font-size: 14px;
-    font-family: inherit;
-    transition: all 0.3s ease;
-    margin-bottom: 0;
-  }
+    .input-group>label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.55);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 7px;
+      cursor: default;
+      padding: 0;
+      background: none;
+      border-radius: 0;
+    }
 
-  input[type="text"]:focus {
-    outline: none;
-    border-color: #b70028;
-    background: rgba(255,255,255,0.08);
-    box-shadow: 0 0 0 3px rgba(183,0,40,0.2);
-  }
+    .input-group>label:hover {
+      background: none;
+      transform: none;
+    }
 
-  input[type="text"]::placeholder { color: rgba(255,255,255,0.3); }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #ffffff;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.3s ease;
+      margin-bottom: 0;
+    }
 
-  .error-msg {
-    font-size: 12px;
-    color: #ff6b6b;
-    margin: 12px 0 4px;
-    padding: 8px 12px;
-    background: rgba(255,107,107,0.1);
-    border-left: 3px solid #ff6b6b;
-    border-radius: 4px;
-    display: none;
-  }
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #b70028;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 3px rgba(183, 0, 40, 0.2);
+    }
 
-  hr {
-    border: none;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    margin: 22px 0;
-  }
+    input[type="text"]::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
 
-  button {
-    width: 100%;
-    padding: 12px 16px;
-    margin-bottom: 10px;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    font-family: inherit;
-  }
+    .error-msg {
+      font-size: 12px;
+      color: #ff6b6b;
+      margin: 12px 0 4px;
+      padding: 8px 12px;
+      background: rgba(255, 107, 107, 0.1);
+      border-left: 3px solid #ff6b6b;
+      border-radius: 4px;
+      display: none;
+    }
 
-  .btn-convert {
-    background: linear-gradient(135deg, #b70028 0%, #a71057 100%);
-    color: white;
-  }
+    hr {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      margin: 22px 0;
+    }
 
-  .btn-convert:hover {
-    background: linear-gradient(135deg, #a71057 0%, #823276 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(183,0,40,0.4);
-  }
+    button {
+      width: 100%;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      font-family: inherit;
+    }
 
-  .btn-back {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 12px 16px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 600;
-    color: rgba(255,255,255,0.75);
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    margin-bottom: 0;
-  }
+    .btn-convert {
+      background: linear-gradient(135deg, #b70028 0%, #a71057 100%);
+      color: white;
+    }
 
-  .btn-back:hover {
-    background: rgba(255,255,255,0.09);
-    border-color: rgba(255,255,255,0.2);
-    transform: translateY(-2px);
-    color: #ffffff;
-  }
+    .btn-convert:hover {
+      background: linear-gradient(135deg, #a71057 0%, #823276 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(183, 0, 40, 0.4);
+    }
 
-  /* Result box — same style as .info-card */
-  .result-box {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-left: 4px solid #b70028;
-    border-radius: 8px;
-    padding: 16px;
-    margin-top: 22px;
-    display: none;
-    animation: fadeInUp 0.3s ease forwards;
-  }
+    .btn-back {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.75);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      margin-bottom: 0;
+    }
 
-  .result-box.show { display: block; }
+    .btn-back:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      color: #ffffff;
+    }
 
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+    /* Result box — same style as .info-card */
+    .result-box {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-left: 4px solid #b70028;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 22px;
+      display: none;
+      animation: fadeInUp 0.3s ease forwards;
+    }
 
-  .result-title {
-    font-size: 11px;
-    font-weight: 600;
-    color: rgba(255,255,255,0.55);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    margin-bottom: 14px;
-  }
+    .result-box.show {
+      display: block;
+    }
 
-  .coord-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
 
-  .coord-item {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 6px;
-    padding: 10px 12px;
-    transition: all 0.2s ease;
-  }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-  .coord-item:hover {
-    background: rgba(255,255,255,0.08);
-    transform: translateX(4px);
-  }
+    .result-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.55);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 14px;
+    }
 
-  .coord-label {
-    font-size: 11px;
-    font-weight: 600;
-    color: rgba(255,255,255,0.5);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    margin-bottom: 5px;
-  }
+    .coord-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
 
-  .coord-value {
-    font-size: 18px;
-    font-weight: 700;
-    color: #ffffff;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-    letter-spacing: 0.5px;
-  }
+    .coord-item {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 10px 12px;
+      transition: all 0.2s ease;
+    }
 
-  .btn-add-zone {
-    background: linear-gradient(135deg, #54447d 0%, #823276 100%);
-    color: white;
-    margin-bottom: 0;
-  }
+    .coord-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateX(4px);
+    }
 
-  .btn-add-zone:hover {
-    background: linear-gradient(135deg, #823276 0%, #a71057 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(130,50,118,0.4);
-  }
+    .coord-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 5px;
+    }
 
-  .toast {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: linear-gradient(135deg, #b70028, #a71057);
-    color: white;
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 600;
-    padding: 12px 24px;
-    border-radius: 8px;
-    opacity: 0;
-    transition: opacity 0.3s, transform 0.3s;
-    pointer-events: none;
-    z-index: 999;
-    box-shadow: 0 4px 16px rgba(183,0,40,0.4);
-  }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-</style>
+    .coord-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+      letter-spacing: 0.5px;
+    }
+
+    .btn-add-zone {
+      background: linear-gradient(135deg, #54447d 0%, #823276 100%);
+      color: white;
+      margin-bottom: 0;
+    }
+
+    .btn-add-zone:hover {
+      background: linear-gradient(135deg, #823276 0%, #a71057 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(130, 50, 118, 0.4);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: linear-gradient(135deg, #b70028, #a71057);
+      color: white;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 24px;
+      border-radius: 8px;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+      z-index: 999;
+      box-shadow: 0 4px 16px rgba(183, 0, 40, 0.4);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="card">
-  <div class="card-header">
-    <h2>🧭 Convertisseur DMS Aviation</h2>
-    <p>EPSG:4326 · Latitude / Longitude</p>
-  </div>
-
-  <div class="section-title">Coordonnées DMS</div>
-
-  <div class="input-row">
-    <div class="input-group">
-      <label>Latitude</label>
-      <input type="text" id="latInput" placeholder="364956.1N">
+  <div class="card">
+    <div class="card-header">
+      <h2>🧭 Convertisseur DMS Aviation</h2>
+      <p>EPSG:4326 · Latitude / Longitude</p>
     </div>
-    <div class="input-group">
-      <label>Longitude</label>
-      <input type="text" id="lngInput" placeholder="0101337.9E">
-    </div>
-  </div>
 
-  <p class="error-msg" id="errorMsg">⚠ Format invalide. Exemple : 364956.1N / 0101337.9E</p>
+    <div class="section-title">Coordonnées DMS</div>
 
-  <hr>
-
-  <button class="btn-convert" onclick="convert()">⟳ Convertir</button>
-  <a href="drone-zone.html" class="btn-back">← Retour No Drone Zone</a>
-
-  <div class="result-box" id="result">
-    <div class="result-title">✓ Résultat EPSG:4326</div>
-    <div class="coord-grid">
-      <div class="coord-item">
-        <div class="coord-label">Latitude</div>
-        <div class="coord-value" id="resLat">—</div>
+    <div class="input-row">
+      <div class="input-group">
+        <label>Latitude</label>
+        <input type="text" id="latInput" placeholder="364956.1N">
       </div>
-      <div class="coord-item">
-        <div class="coord-label">Longitude</div>
-        <div class="coord-value" id="resLng">—</div>
+      <div class="input-group">
+        <label>Longitude</label>
+        <input type="text" id="lngInput" placeholder="0101337.9E">
       </div>
     </div>
-    <button class="btn-add-zone" onclick="saveToLocalStorage()">
-      📍 Envoyer vers No Drone Zone
-    </button>
+
+    <p class="error-msg" id="errorMsg">⚠ Format invalide. Exemple : 364956.1N / 0101337.9E</p>
+
+    <hr>
+
+    <button class="btn-convert" onclick="convert()">⟳ Convertir</button>
+    <a href="drone-zone.html" class="btn-back">← Retour No Drone Zone</a>
+
+    <div class="result-box" id="result">
+      <div class="result-title">✓ Résultat EPSG:4326</div>
+      <div class="coord-grid">
+        <div class="coord-item">
+          <div class="coord-label">Latitude</div>
+          <div class="coord-value" id="resLat">—</div>
+        </div>
+        <div class="coord-item">
+          <div class="coord-label">Longitude</div>
+          <div class="coord-value" id="resLng">—</div>
+        </div>
+      </div>
+      <button class="btn-add-zone" onclick="saveToLocalStorage()">
+        📍 Envoyer vers No Drone Zone
+      </button>
+    </div>
   </div>
-</div>
 
-<div class="toast" id="toast">Coordonnées enregistrées ✓</div>
+  <div class="toast" id="toast">Coordonnées enregistrées ✓</div>
 
-<script>
-let lastLat = null, lastLng = null;
+  <script>
+    let lastLat = null, lastLng = null;
 
-function dmsToDecimal(dms) {
-  const dir = dms.slice(-1).toUpperCase();
-  const val = dms.slice(0, -1);
-  let deg, min, sec;
-  if (val.length <= 8) {
-    deg = parseInt(val.slice(0, 2));
-    min = parseInt(val.slice(2, 4));
-    sec = parseFloat(val.slice(4));
-  } else {
-    deg = parseInt(val.slice(0, 3));
-    min = parseInt(val.slice(3, 5));
-    sec = parseFloat(val.slice(5));
-  }
-  let decimal = deg + (min / 60) + (sec / 3600);
-  if (dir === 'S' || dir === 'W') decimal *= -1;
-  return decimal;
-}
+    function dmsToDecimal(dms) {
+      if (!dms) return NaN;
 
-function convert() {
-  const latDMS = document.getElementById('latInput').value.trim();
-  const lngDMS = document.getElementById('lngInput').value.trim();
-  const errEl  = document.getElementById('errorMsg');
-  const resBox = document.getElementById('result');
-  try {
-    const lat = dmsToDecimal(latDMS);
-    const lng = dmsToDecimal(lngDMS);
-    if (isNaN(lat) || isNaN(lng)) throw new Error();
-    lastLat = lat; lastLng = lng;
-    document.getElementById('resLat').textContent = lat.toFixed(6);
-    document.getElementById('resLng').textContent = lng.toFixed(6);
-    errEl.style.display = 'none';
-    resBox.classList.add('show');
-  } catch {
-    errEl.style.display = 'block';
-    resBox.classList.remove('show');
-  }
-}
+      // Identifier la direction (N, S, E, O/W)
+      const dirMatch = dms.match(/[NSEOW]/i);
+      if (!dirMatch) return NaN;
+      let dir = dirMatch[0].toUpperCase();
+      if (dir === 'O') dir = 'W'; // Gérer 'O' pour Ouest en français
 
-function saveToLocalStorage() {
-  if (lastLat === null) return;
-  const existing = JSON.parse(localStorage.getItem('pendingCoords') || '[]');
-  existing.push({ lat: lastLat, lng: lastLng, timestamp: Date.now() });
-  localStorage.setItem('pendingCoords', JSON.stringify(existing));
-  const toast = document.getElementById('toast');
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2500);
-}
+      // Nettoyer la chaîne pour ne garder que les chiffres, points et séparateurs
+      const cleanStr = dms.replace(/[NSEOW]/i, '').trim();
 
-document.addEventListener('keydown', e => { if (e.key === 'Enter') convert(); });
-</script>
+      let deg, min, sec;
+
+      // Cas 1 : Format avec séparateurs (ex: 36° 50' 50.7")
+      if (/[\s°'"]/.test(cleanStr)) {
+        const parts = cleanStr.split(/[\s°'"]+/).filter(p => p.length > 0);
+        deg = parseFloat(parts[0] || 0);
+        min = parseFloat(parts[1] || 0);
+        sec = parseFloat(parts[2] || 0);
+      }
+      // Cas 2 : Format compact aéronautique (ex: 365050.7 ou 0101319.7)
+      else {
+        const dotIndex = cleanStr.indexOf('.');
+        let integerPart = dotIndex !== -1 ? cleanStr.slice(0, dotIndex) : cleanStr;
+        let decimalPart = dotIndex !== -1 ? cleanStr.slice(dotIndex) : "";
+
+        if (integerPart.length >= 4) {
+          // Les 2 derniers chiffres de l'entier sont les secondes
+          const sInt = integerPart.slice(-2);
+          // Les 2 chiffres précédents sont les minutes
+          const mInt = integerPart.slice(-4, -2);
+          // Le reste au début sont les degrés
+          const dInt = integerPart.slice(0, -4);
+
+          deg = parseInt(dInt, 10) || 0;
+          min = parseInt(mInt, 10) || 0;
+          sec = parseFloat(sInt + decimalPart) || 0;
+        } else {
+          return NaN;
+        }
+      }
+
+      // Appliquer la règle : Degrés + Minutes/60 + Secondes/3600
+      let decimal = deg + (min / 60) + (sec / 3600);
+
+      // Direction Sud ou Ouest → valeur négative
+      if (dir === 'S' || dir === 'W') decimal *= -1;
+
+      return decimal;
+    }
+
+    function convert() {
+      const latDMS = document.getElementById('latInput').value.trim();
+      const lngDMS = document.getElementById('lngInput').value.trim();
+      const errEl = document.getElementById('errorMsg');
+      const resBox = document.getElementById('result');
+      try {
+        const lat = dmsToDecimal(latDMS);
+        const lng = dmsToDecimal(lngDMS);
+        if (isNaN(lat) || isNaN(lng)) throw new Error();
+        lastLat = lat; lastLng = lng;
+        document.getElementById('resLat').textContent = lat.toFixed(6);
+        document.getElementById('resLng').textContent = lng.toFixed(6);
+        errEl.style.display = 'none';
+        resBox.classList.add('show');
+      } catch {
+        errEl.style.display = 'block';
+        resBox.classList.remove('show');
+      }
+    }
+
+    function saveToLocalStorage() {
+      if (lastLat === null) return;
+      const existing = JSON.parse(localStorage.getItem('pendingCoords') || '[]');
+      existing.push({ lat: lastLat, lng: lastLng, timestamp: Date.now() });
+      localStorage.setItem('pendingCoords', JSON.stringify(existing));
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Enter') convert(); });
+  </script>
 </body>
+
 </html>

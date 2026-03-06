@@ -170,11 +170,11 @@ document.getElementById('createShape').onclick = () => {
       break;
 
     case 'polyline':
-      layer = L.polyline(points);
+      layer = L.polyline(points, DRAW_STYLE);
       break;
 
     case 'polygon':
-      layer = L.polygon(points);
+      layer = L.polygon(points, DRAW_STYLE);
       break;
 
     case 'rectangle':
@@ -182,7 +182,7 @@ document.getElementById('createShape').onclick = () => {
         alert('Rectangle = 2 points minimum');
         return;
       }
-      layer = L.rectangle(points);
+      layer = L.rectangle(points, DRAW_STYLE);
       break;
 
     case 'circle':
@@ -191,7 +191,7 @@ document.getElementById('createShape').onclick = () => {
         alert('Rayon requis');
         return;
       }
-      layer = L.circle(points[0], { radius });
+      layer = L.circle(points[0], { radius, ...DRAW_STYLE });
       break;
   }
 

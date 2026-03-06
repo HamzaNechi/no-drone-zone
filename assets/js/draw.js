@@ -7,10 +7,10 @@ const drawControl = new L.Control.Draw({
     featureGroup: drawnItems
   },
   draw: {
-    polyline: true,
-    polygon: true,
-    rectangle: true,
-    circle: true,
+    polyline: { shapeOptions: DRAW_STYLE },
+    polygon: { shapeOptions: DRAW_STYLE },
+    rectangle: { shapeOptions: DRAW_STYLE },
+    circle: { shapeOptions: DRAW_STYLE },
     marker: true
   }
 });
@@ -35,7 +35,7 @@ const VALIDATION_MESSAGE = {
   authorization: {
     message: "Autorisé de survoler après confirmation avec les autorités compétentes.",
     color: "#f39c12",
-    icon : "🔒"
+    icon: "🔒"
   },
   allowed: {
     message: "Zone valide pour le vol",
@@ -48,39 +48,39 @@ const VALIDATION_MESSAGE = {
 let alertTimeout = null; // Variable globale pour gérer le timer
 
 function showDroneStatus(type, zoneName = null, validationResult = null) {
-    const box = document.getElementById("droneStatus");
-    
-    var config = {};
-    var title= '';
-    if(!validationResult.allowed){
-      config = VALIDATION_MESSAGE["forbidden"];
-      title = "Vol Interdit";
-    }else if(validationResult.requiresAuthorization){
-      config = VALIDATION_MESSAGE["authorization"];
-      title = "AUTORISATION REQUISE";
-    }else{
-      config = VALIDATION_MESSAGE["allowed"];
-      title = "";
-    }
+  const box = document.getElementById("droneStatus");
 
-    
-    // Déterminer le nom de la zone
-    const zoneDisplay = zoneName || validationResult?.name_zone || "Zone non identifiée";
+  var config = {};
+  var title = '';
+  if (!validationResult.allowed) {
+    config = VALIDATION_MESSAGE["forbidden"];
+    title = "Vol Interdit";
+  } else if (validationResult.requiresAuthorization) {
+    config = VALIDATION_MESSAGE["authorization"];
+    title = "AUTORISATION REQUISE";
+  } else {
+    config = VALIDATION_MESSAGE["allowed"];
+    title = "";
+  }
 
-    console.log('oooooooo = ', validationResult.layer)
-    
-    // Déterminer le message approprié
-    let alertMessage = config.message;
-    let alertIcon = config.icon;
-    
 
-    
-    box.style.display = "block";
-    box.style.borderLeft = `6px solid ${config.color}`;
-    box.style.background = "rgba(255, 255, 255, 0.95)";
-    box.style.backdropFilter = "blur(10px)";
-    
-    box.innerHTML = `
+  // Déterminer le nom de la zone
+  const zoneDisplay = zoneName || validationResult?.name_zone || "Zone non identifiée";
+
+  console.log('oooooooo = ', validationResult.layer)
+
+  // Déterminer le message approprié
+  let alertMessage = config.message;
+  let alertIcon = config.icon;
+
+
+
+  box.style.display = "block";
+  box.style.borderLeft = `6px solid ${config.color}`;
+  box.style.background = "rgba(255, 255, 255, 0.95)";
+  box.style.backdropFilter = "blur(10px)";
+
+  box.innerHTML = `
         <div style="display: flex; align-items: start; gap: 12px;">
             <div style="
                 font-size: 28px; 
@@ -134,43 +134,43 @@ function showDroneStatus(type, zoneName = null, validationResult = null) {
             </div>
         </div>
     `;
-    
-    // Annuler le timer précédent s'il existe
-    if (alertTimeout) {
-        clearTimeout(alertTimeout);
+
+  // Annuler le timer précédent s'il existe
+  if (alertTimeout) {
+    clearTimeout(alertTimeout);
+  }
+
+  // Démarrer l'animation de la barre de progression
+  setTimeout(() => {
+    const progressBar = document.getElementById("alertProgress");
+    if (progressBar) {
+      progressBar.style.width = "0%";
     }
-    
-    // Démarrer l'animation de la barre de progression
-    setTimeout(() => {
-        const progressBar = document.getElementById("alertProgress");
-        if (progressBar) {
-            progressBar.style.width = "0%";
-        }
-    }, 10);
-    
-    // Timer de fermeture automatique après 10 secondes
-    alertTimeout = setTimeout(() => {
-        closeDroneStatus();
-    }, 10000);
+  }, 10);
+
+  // Timer de fermeture automatique après 10 secondes
+  alertTimeout = setTimeout(() => {
+    closeDroneStatus();
+  }, 10000);
 }
 
 function closeDroneStatus() {
-    const box = document.getElementById("droneStatus");
-    box.style.opacity = "0";
-    box.style.transform = "translateX(20px)";
-    box.style.transition = "opacity 0.3s ease, transform 0.3s ease";
-    
-    setTimeout(() => {
-        box.style.display = "none";
-        box.style.opacity = "1";
-        box.style.transform = "translateX(0)";
-    }, 300);
-    
-    // Annuler le timer
-    if (alertTimeout) {
-        clearTimeout(alertTimeout);
-        alertTimeout = null;
-    }
+  const box = document.getElementById("droneStatus");
+  box.style.opacity = "0";
+  box.style.transform = "translateX(20px)";
+  box.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+
+  setTimeout(() => {
+    box.style.display = "none";
+    box.style.opacity = "1";
+    box.style.transform = "translateX(0)";
+  }, 300);
+
+  // Annuler le timer
+  if (alertTimeout) {
+    clearTimeout(alertTimeout);
+    alertTimeout = null;
+  }
 }
 
 
@@ -221,8 +221,8 @@ map.on(L.Draw.Event.CREATED, function (event) {
   }
 
 
-  if(validation.requiresAuthorization){
-    showDroneStatus(validation.level, validation.name_zone, validation); 
+  if (validation.requiresAuthorization) {
+    showDroneStatus(validation.level, validation.name_zone, validation);
     drawnItems.addLayer(layer);
     return;
   }
